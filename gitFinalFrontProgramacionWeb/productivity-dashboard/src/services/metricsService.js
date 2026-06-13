@@ -1,11 +1,16 @@
-import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
-const API_URL = "http://localhost:8080/metrics";
+export const getMetrics = async (metric, developer = null) => {
+    const url = developer
+        ? `${API_URL}/metrics/${metric}?developer=${encodeURIComponent(developer)}`
+        : `${API_URL}/metrics/${metric}`;
 
-export const getMetricData = async (metric) => {
-    const response = await axios.get(
-        `${API_URL}/${metric}`
-    );
+    const response = await fetch(url);
 
-    return response.data;
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Error ${response.status}: ${response.statusText}`);
+    }
+
+    return response.json();
 };

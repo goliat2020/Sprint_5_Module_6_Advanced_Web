@@ -19,6 +19,10 @@ public class MetricsController {
 
     private final MetricsService service;
 
+    public MetricsController(MetricsService service) {
+        this.service = service;
+    }
+
     @GetMapping("/{metric}")
     public List<MetricResponseDTO> getMetricData(
             @PathVariable String metric) {

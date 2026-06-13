@@ -1,8 +1,18 @@
-import Dashboard from "./component/Dashboard";
+import { useState } from 'react';
+
+import NavBar from './components/NavBar';
+import Dashboard from './components/Dashboard';
 
 
 function App() {
-  return <Dashboard />;
+  const [selectedMetric, setSelectedMetric] = useState('commits');
+
+  return (
+    <>
+      <NavBar selected={selectedMetric} onSelect={setSelectedMetric} />
+      <Dashboard selectedMetric={selectedMetric} onMetricChange={setSelectedMetric} />
+    </>
+  );
 }
 
 export default App;

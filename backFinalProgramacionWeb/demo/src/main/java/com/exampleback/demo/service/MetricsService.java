@@ -1,61 +1,46 @@
 package com.exampleback.demo.service;
 
-
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.exampleback.demo.dto.MetricResponseDTO;
 import com.exampleback.demo.model.DeveloperMetric;
 import com.exampleback.demo.repository.DeveloperMetricRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class MetricsService {
 
-private final DeveloperMetricRepository repository;
+    private final DeveloperMetricRepository repository;
 
-public List<MetricResponseDTO> getMetricData(
-        String metric) {
+    public MetricsService(DeveloperMetricRepository repository) {
+        this.repository = repository;
+    }
 
-List<DeveloperMetric> metrics =
-        repository.findAll();
+    private static final List<String> VALID_METRICS =
+            List.of("commits", "bugs", "tasks", "storyPoints");
 
-return metrics.stream()
-        .map(m -> {
+    public List<MetricResponseDTO> getMetricData(String metric) {
+        if (!VALID_METRICS.contains(metric)) {
+            throw new IllegalArgumentException("Métrica no válida: " + metric +
+                    ". Valores permitidos: " + VALID_METRICS);
+        }
 
-                MetricResponseDTO dto =
-                        new MetricResponseDTO();
+        return repository.findAll().stream()
+                .map(m -> mapToDTO(m, metric))
+                .toList();
+    }
 
-                dto.setLabel(
-                        m.getMetricDate().toString());
-
-                switch (metric) {
-
-                case "commits":
-                        dto.setValue(m.getCommits());
-                        break;
-
-                case "bugs":
-                        dto.setValue(m.getBugsFixed());
-                        break;
-
-                case "tasks":
-                        dto.setValue(m.getTasksCompleted());
-                        break;
-
-                case "storyPoints":
-                        dto.setValue(m.getStoryPoints());
-                        break;
-
-                default:
-                        dto.setValue(0);
-                }
-
-                return dto;
-        })
-        .toList();
-}
+    private MetricResponseDTO mapToDTO(DeveloperMetric m, String metric) {
+        MetricResponseDTO dto = new MetricResponseDTO();
+        dto.setLabel(m.getMetricDate().toString());
+        dto.setValue(switch (metric) {
+            case "commits"     -> m.getCommits();
+            case "bugs"        -> m.getBugsFixed();
+            case "tasks"       -> m.getTasksCompleted();
+            case "storyPoints" -> m.getStoryPoints();
+            default            -> 0;
+        });
+        return dto;
+    }
 }
