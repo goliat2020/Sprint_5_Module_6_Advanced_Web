@@ -1,14 +1,14 @@
 package com.exampleback.demo.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.exampleback.demo.dto.MetricResponseDTO;
 import com.exampleback.demo.model.DeveloperMetric;
 import com.exampleback.demo.repository.DeveloperMetricRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class MetricsService {
 
     private final DeveloperMetricRepository repository;
@@ -25,7 +25,6 @@ public class MetricsService {
             throw new IllegalArgumentException("Métrica no válida: " + metric +
                     ". Valores permitidos: " + VALID_METRICS);
         }
-
         return repository.findAll().stream()
                 .map(m -> mapToDTO(m, metric))
                 .toList();

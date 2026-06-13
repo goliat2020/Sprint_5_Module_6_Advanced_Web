@@ -10,11 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.exampleback.demo.dto.MetricResponseDTO;
 import com.exampleback.demo.service.MetricsService;
 
-import lombok.RequiredArgsConstructor;
-
 @RestController
 @RequestMapping("/metrics")
-@RequiredArgsConstructor
 public class MetricsController {
 
     private final MetricsService service;
@@ -24,9 +21,7 @@ public class MetricsController {
     }
 
     @GetMapping("/{metric}")
-    public List<MetricResponseDTO> getMetricData(
-            @PathVariable String metric) {
-
+    public List<MetricResponseDTO> getMetricData(@PathVariable String metric) {
         return service.getMetricData(metric);
     }
 }
