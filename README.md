@@ -1,3 +1,6 @@
+# Video de presentacion
+https://www.youtube.com/watch?v=6nvQ_jmSeCI&feature=youtu.be&themeRefresh=1
+
 # Productivity Dashboard
 
 Proyecto full stack para visualizar métricas de desarrollo con un frontend en React y un backend en Spring Boot.
